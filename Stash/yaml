@@ -1,1 +1,127 @@
+mode: rule # 规则模式：rule（规则） / global（全局代理）/ direct（全局直连）/ script (脚本)
+log-level: info # 设置日志输出级别 (5 个级别：silent / error / warning / info / debug）
+dns:
+  default-nameserver: [223.5.5.5, 119.29.29.29]
+  # 解析非IP的dns用的dns服务器,只支持纯IP
+  fake-ip-filter: ['*.lan', 'cable.auth.com', '*.msftconnecttest.com', '*.msftncsi.com', 'network-test.debian.org', 'detectportal.firefox.com', 'resolver1.opendns.com', '*.srv.nintendo.net', '*.stun.playstation.net', 'xbox.*.microsoft.com', '*.xboxlive.com', 'stun.*', 'global.turn.twilio.com', 'global.stun.twilio.com', 'localhost.*.qq.com', 'localhost.*.weixin.qq.com', '*.logon.battlenet.com.cn', '*.logon.battle.net', '*.blzstatic.cn', 'music.163.com', '*.music.163.com', '*.126.net', 'musicapi.taihe.com', 'music.taihe.com', 'songsearch.kugou.com', 'trackercdn.kugou.com', '*.kuwo.cn', 'api-jooxtt.sanook.com', 'api.joox.com', 'joox.com', 'y.qq.com', '*.y.qq.com', 'streamoc.music.tc.qq.com', 'mobileoc.music.tc.qq.com', 'isure.stream.qqmusic.qq.com', 'dl.stream.qqmusic.qq.com', 'aqqmusic.tc.qq.com', 'amobile.music.tc.qq.com', '*.xiami.com', '*.music.migu.cn', 'music.migu.cn', 'proxy.golang.org', '*.mcdn.bilivideo.cn', '*.cmpassport.com', 'id6.me', 'open.e.189.cn', 'mdn.open.wo.cn', 'opencloud.wostore.cn', 'auth.wosms.cn', '*.jegotrip.com.cn', '*.icitymobile.mobi', '*.pingan.com.cn', '*.cmbchina.com', 'pool.ntp.org', '*.pool.ntp.org', 'ntp.*.com', 'time.*.com', 'ntp?.*.com', 'time?.*.com', 'time.*.gov', 'time.*.edu.cn', '*.ntp.org.cn', 'PDC._msDCS.*.*', 'DC._msDCS.*.*', 'GC._msDCS.*.*']
+  # fake ip 白名单列表'以下地址不会下发fakeip映射用于连接
+  nameserver: ['https://doh.pub/dns-query', 'https://dns.alidns.com/dns-query']
+  # 默认DNS服务器，支持udp/tcp/dot/doh/doq
+###建立锚点
+
+# 策略组引用相关参数
+pr: &pr {type: select, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点, DIRECT]}
+# 订阅更新和延迟测试相关参数
+p: &p {type: http, interval: 86400, health-check: {enable: true, url: 'http://www.gstatic.com/generate_204', interval: 1800}}
+# 自动选择策略组：选取延迟最低节点
+auto: &auto {type: url-test, lazy: true, url: 'http://www.gstatic.com/generate_204', interval: 900, use: [Subscribe]}
+# 手动选择策略组：手动选择想要的节点/策略组
+select: &select {type: select, use: [Subscribe]}
+# 故障回退策略组：策略组将按顺序选择你列表中第一个可用的节点
+fallback: &fallback {type: fallback, lazy: true, url: 'http://www.gstatic.com/generate_204', interval: 900, use: [Subscribe]}
+# 负载均衡策略组：不同的请求将使用不同的代理节点
+load-balance: &load-balance {type: load-balance, lazy: true, url: 'http://www.gstatic.com/generate_204', interval: 900, use: [Subscribe]}
+# classical规则相关
+c: &c {type: http, behavior: classical, interval: 86400}
+# domain规则相关
+d: &d {type: http, behavior: domain, interval: 86400}
+# ipcidr规则相关
+i: &i {type: http, behavior: ipcidr, interval: 86400}
+###结束
+
+# > 订阅信息展示
+subscribe-url:
+proxy-providers:
+  # > 远程服务器
+  Subscribe: {!!merge <<: *p, url: '', benchmark-url: 'http://www.gstatic.com/generate_204', interval: 86400}
+proxy-groups:
+  # 分流分组
+  - {name: 手动切换, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Static.png', type: select, use: [Subscribe], proxies: null, include-all: true, use-url: null}
+  - {name: 国外网站, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png', !!merge <<: *pr, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点], type: select}
+  - {name: 国际媒体, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Media.png', !!merge <<: *pr, proxies: [手动切换, 狮城节点, 香港节点, 美国节点, 日本节点, 台湾节点], type: select}
+  - {name: YouTube, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png', !!merge <<: *pr, proxies: [香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点], type: select}
+  - {name: Netflix, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png', !!merge <<: *pr, proxies: [手动切换, 狮城节点, 台湾节点], type: select}
+  - {name: 苹果服务, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple_1.png', !!merge <<: *pr, proxies: [DIRECT, 手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点], type: select}
+  - {name: 谷歌服务, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png', !!merge <<: *pr}
+  - {name: 电报消息, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png', !!merge <<: *pr, filter: 新加坡, proxies: [手动切换], type: select, use-url: ['https://nyjvbs.xyz/?L1N1YnNjcmlwdGlvbi9DbGFzaD9zaWQ9MzQ1NjQmdG9rZW49N0FDT2FBWUtyQW4mbW09NDQ2NTAmNmM3MTI0MWE1YQ==']}
+  - {name: 哔哩哔哩, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/bilibili.png', type: select, proxies: [DIRECT, 香港节点, 台湾节点]}
+  - {name: OpenAI, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bot.png', !!merge <<: *pr, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点], type: select}
+  - {name: 兜底分流, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png', !!merge <<: *pr, proxies: [手动切换, 香港节点], type: select}
+  # 节点地区分流
+  - {name: 香港节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png', !!merge <<: *auto, filter: "^(?=.*((?i)🇭🇰|香港|(\b(HK|Hong)\b)))(?!.*((?i)回国|校园|游戏|(\b(GAME)\b))).*$", hidden: true, interval: 900, lazy: true, type: url-test, use: [Subscribe]}
+  - {name: 日本节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png', !!merge <<: *auto, filter: "^(?=.*((?i)🇯🇵|日本|川日|东京|大阪|泉日|埼玉|(\b(JP|Japan)\b)))(?!.*((?i)回国|校园|游戏|(\b(GAME)\b))).*$", hidden: true, interval: 900, lazy: true, type: url-test, use: [Subscribe]}
+  - {name: 美国节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png', !!merge <<: *auto, filter: "^(?=.*((?i)🇺🇸|美国|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|(\b(US|United States)\b)))(?!.*((?i)回国|校园|游戏|(\b(GAME)\b))).*$", hidden: true, interval: 900, lazy: true, type: url-test, use: [Subscribe]}
+  - {name: 台湾节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png', !!merge <<: *auto, filter: "^(?=.*((?i)🇹🇼|台湾|(\b(TW|Tai|Taiwan)\b)))(?!.*((?i)回国|校园|游戏|(\b(GAME)\b))).*$", hidden: true, interval: 900, lazy: true, type: url-test, use: [Subscribe]}
+  - {name: 狮城节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png', !!merge <<: *auto, filter: "^(?=.*((?i)🇸🇬|新加坡|狮|(\b(SG|Singapore)\b)))(?!.*((?i)回国|校园|游戏|(\b(GAME)\b))).*$", interval: 900, lazy: true, type: select, use: [Subscribe]}
+rule-providers:
+  # 规则修正
+  Direct: {!!merge <<: *c, url: 'https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Direct/Direct.yaml'}
+  # 局域网   
+  Lan: {!!merge <<: *c, url: 'https://ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/LocalAreaNetwork.yaml'}
+  #广告拦截
+  AD-Block: {!!merge <<: *c, url: 'https://ghproxy.com/https://raw.githubusercontent.com/dler-io/Rules/main/Clash/Provider/Reject.yaml'}
+  # 苹果服务
+  APNs: {!!merge <<: *c, url: 'https://ghproxy.com/https://raw.githubusercontent.com/Repcz/Open-Proflies/main/Stash/Rules/APNs.yaml'}
+  Apple: {!!merge <<: *c, url: 'https://ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Apple.yaml'}
+  # 谷歌服务
+  Youtube: {!!merge <<: *c, url: 'https://ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/YouTube.yaml'}
+  Google: {!!merge <<: *c, url: 'https://ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/Google.yaml'}
+  # 电报消息
+  Telegram: {!!merge <<: *c, url: 'https://ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/Telegram.yaml'}
+  # 推特消息
+  Twitter: {!!merge <<: *c, url: 'https://ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/Twitter.yaml'}
+  # 隐私网络
+  Private: {!!merge <<: *d, path: ./ruleset/Private.yaml, url: 'https://rules.kr328.app/private.yaml'}
+  # 哔哩哔哩
+  BiliBili: {!!merge <<: *c, url: 'https://ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/Bilibili.yaml'}
+  # AI平台
+  OpenAI: {!!merge <<: *c, url: 'https://ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/OpenAi.yaml'}
+  # 中国大陆
+  ChinaIP: {!!merge <<: *i, url: 'https://ghproxy.com/https://raw.githubusercontent.com/soffchen/GeoIP2-CN/release/clash-rule-provider.yml'}
+  # 国际媒体
+  ProxyMedia: {!!merge <<: *c, path: ./ruleset/ProxyMedia.yaml, url: 'https://ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ProxyMedia.yaml'}
+  # 代理网站
+  ProxyGFWlist: {!!merge <<: *c, path: ./ruleset/ProxyGFWlist.yaml, url: 'https://ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ProxyGFWlist.yaml'}
+  Netflix:
+    behavior: classical
+    format: yaml
+    interval: 86400
+    url: https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Netflix/Netflix.yaml
+  WeChat:
+    behavior: classical
+    format: yaml
+    interval: 86400
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/WeChat/WeChat.yaml
+  HTTPDNS拦截:
+    behavior: classical
+    format: yaml
+    interval: 86400
+    url: https://cdn.jsdelivr.net/gh/VirgilClyne/GetSomeFries@main/ruleset/HTTPDNS.Block.yaml
+rules:
+  #  - AND,((NETWORK,UDP),(DST-PORT,443)),REJECT
+  #  - SCRIPT,quic,REJECT
+  - DOMAIN,rules.kr328.app,Proxy
+  - RULE-SET,Private,DIRECT
+  - RULE-SET,HTTPDNS拦截,REJECT
+  - RULE-SET,Direct,DIRECT
+  - RULE-SET,Netflix,Netflix
+  - RULE-SET,Lan,DIRECT
+  - RULE-SET,APNs,DIRECT
+  - RULE-SET,AD-Block,REJECT
+  - RULE-SET,OpenAI,OpenAI
+  - RULE-SET,Apple,苹果服务
+  - RULE-SET,Youtube,YouTube
+  - RULE-SET,Google,谷歌服务
+  - RULE-SET,Telegram,电报消息
+  - RULE-SET,BiliBili,哔哩哔哩
+  - RULE-SET,ProxyMedia,国际媒体
+  - RULE-SET,ProxyGFWlist,国外网站
+  - RULE-SET,WeChat,DIRECT
+  - GEOIP,private,DIRECT
+  - RULE-SET,ChinaIP,DIRECT
+  - GEOIP,CN,DIRECT
+  - MATCH,兜底分流
+script:
+  shortcuts:
+    quic: network == 'udp' and dst_port == 443
 
