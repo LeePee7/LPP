@@ -33,7 +33,7 @@
 </details>
 
 ```
-https://ghproxy.com/https://raw.githubusercontent.com/Repcz/Open-Proflies/main/ClashMeta/CM.yaml
+https://raw.githubusercontent.com/LeePee7/LPP/main/ClashMeta/CM.yaml
 ```
 
 ![订阅导入](https://github.com/Repcz/Open-Proflies/blob/main/ClashMeta/Photo/%E5%AF%BC%E5%85%A5%E9%85%8D%E7%BD%AE.png)
@@ -61,7 +61,7 @@ proxy-providers:
 
 **_自用 多流媒体分组 自动测速 配置_**
 ```
-https://raw.githubusercontent.com/Repcz/Open-Proflies/main/ClashMeta/Online_Full_Auto.ini
+https://raw.githubusercontent.com/LeePee7/LPP/main/ClashMeta/Online_Full_Auto.ini
 ```
 #### 3. 选择后端地址并生成订阅
 * 强烈建议使用自建后端，自建后端订阅转换可以有效防止订阅泄露以及规则下载不全等问题，具体方法见[自建subconverter订阅转换](https://github.com/Repcz/Open-Proflies/wiki/%E8%87%AA%E5%BB%BAsubconverter%E8%AE%A2%E9%98%85%E8%BD%AC%E6%8D%A2)
@@ -110,7 +110,7 @@ Clash.Meta for Android
 
 **_自用 多流媒体分组 自动测速 配置_**
 ```
-https://raw.githubusercontent.com/Repcz/Open-Proflies/main/ClashMeta/Online_Full_Auto.ini
+https://raw.githubusercontent.com/LeePee7/LPP/main/ClashMeta/Online_Full_NoAuto.ini
 ```
 #### 3. 选择后端地址并生成订阅
 * 强烈建议使用自建后端，自建后端订阅转换可以有效防止订阅泄露以及规则下载不全等问题，具体方法见[自建subconverter订阅转换](https://github.com/Repcz/Open-Proflies/wiki/%E8%87%AA%E5%BB%BAsubconverter%E8%AE%A2%E9%98%85%E8%BD%AC%E6%8D%A2)
