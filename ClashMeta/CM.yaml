@@ -69,7 +69,7 @@ dns:
 ###建立锚点
     
 # 策略组引用相关参数
-pr: &pr {type: select, proxies: [🚀 手动切换, 🇭🇰 香港节点, 🇺🇸 美国节点, 🇸🇬 狮城节点, 🇯🇵 日本节点,  🇨🇳 台湾节点, ⚠️ 故障转移]}
+pr: &pr {type: select, proxies: [🚀 手动切换, 🇭🇰 香港节点, 🇺🇸 美国节点, 🇸🇬 狮城节点, 🇯🇵 日本节点,  🇨🇳 台湾节点, ♻️ 自动选择, ⚠️ 故障转移, DIRECT]}
 
 # 订阅更新和延迟测试相关参数
 p: &p {type: http, interval: 86400, health-check: {enable: true, url: http://www.gstatic.com/generate_204, interval: 1800}}
@@ -308,7 +308,7 @@ proxies:
   udp: true
 
 #分流分组
-  - {name: 🚀 手动切换, type: select, use: [Subscribe], proxies: [🇭🇰 香港节点, 🇺🇸 美国节点, 🇸🇬 狮城节点, 🇯🇵 日本节点, 🇨🇳 台湾节点]}
+  - {name: 🚀 手动切换, type: select, use: [Subscribe], proxies: [🇭🇰 香港节点, 🇺🇸 美国节点, 🇸🇬 狮城节点, 🇯🇵 日本节点, 🇨🇳 台湾节点, DIRECT]}
 
   - {name: 🌏 国外网站, <<: *pr}
 
@@ -347,7 +347,9 @@ proxies:
   - {name: 🇯🇵 日本节点, <<: *auto, filter: "^(?=.*((?i)🇯🇵|日本|川日|东京|大阪|泉日|埼玉|(\b(JP|Japan)\b)))(?!.*((?i)回国|校园|游戏|(\b(GAME)\b))).*$"}
 
   - {name: 🇨🇳 台湾节点, <<: *auto, filter: "(?i)🇹🇼|台湾|(\b(TW|Tai|Taiwan)\b)"}
-
+  
+  - {name: ♻️ 自动选择, <<: *auto}
+  
   - {name: ⚠️ 故障转移, <<: *fallback}
 
 rule-providers:
