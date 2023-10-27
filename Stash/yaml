@@ -31,28 +31,30 @@ i: &i {type: http, behavior: ipcidr, interval: 86400}
 
 # > 订阅信息展示
 subscribe-url:
+
 proxy-providers:
   # > 远程服务器
-  Subscribe: {!!merge <<: *p, url: '', benchmark-url: 'http://www.gstatic.com/generate_204', interval: 86400}
+  Subscribe: {interval: 86400, benchmark-timeout: 3, benchmark-url: 'http://www.gstatic.com/generate_204', url:你的订阅}
+
 proxy-groups:
   # 分流分组
-  - {name: 手动切换, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Static.png', type: select, use: [Subscribe], proxies: null, include-all: true, use-url: null}
-  - {name: 国外网站, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png', !!merge <<: *pr, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点], type: select}
-  - {name: 国际媒体, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Media.png', !!merge <<: *pr, proxies: [手动切换, 狮城节点, 香港节点, 美国节点, 日本节点, 台湾节点], type: select}
-  - {name: YouTube, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png', !!merge <<: *pr, proxies: [香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点], type: select}
-  - {name: Netflix, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png', !!merge <<: *pr, proxies: [手动切换, 狮城节点, 台湾节点], type: select}
-  - {name: 苹果服务, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple_1.png', !!merge <<: *pr, proxies: [DIRECT, 手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点], type: select}
-  - {name: 谷歌服务, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png', !!merge <<: *pr}
-  - {name: 电报消息, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png', !!merge <<: *pr, filter: 新加坡, proxies: [手动切换], type: select, use-url: ['https://nyjvbs.xyz/?L1N1YnNjcmlwdGlvbi9DbGFzaD9zaWQ9MzQ1NjQmdG9rZW49N0FDT2FBWUtyQW4mbW09NDQ2NTAmNmM3MTI0MWE1YQ==']}
+  - {name: 手动切换, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Static.png', type: select, use: [Subscribe], proxies: [香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点]}
+  - {name: 国外网站, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png', proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点], type: select}
+  - {name: 国际媒体, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Media.png', proxies: [手动切换, 狮城节点, 香港节点, 美国节点, 日本节点, 台湾节点], type: select}
+  - {name: YouTube, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png', proxies: [香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点], type: select}
+  - {name: Netflix, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png', proxies: [手动切换, 狮城节点, 台湾节点], type: select}
+  - {name: 苹果服务, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple_1.png', proxies: [DIRECT, 手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点], type: select}
+  - {name: 谷歌服务, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png', proxies: [香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点], type: select}
+  - {name: 电报消息, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png', proxies: [手动切换, 狮城节点, 香港节点], type: select]}
   - {name: 哔哩哔哩, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/bilibili.png', type: select, proxies: [DIRECT, 香港节点, 台湾节点]}
-  - {name: OpenAI, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bot.png', !!merge <<: *pr, proxies: [手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点], type: select}
-  - {name: 兜底分流, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png', !!merge <<: *pr, proxies: [手动切换, 香港节点], type: select}
+  - {name: OpenAI, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bot.png', proxies: [美国节点, 狮城节点, 日本节点, 台湾节点], type: select}
+  - {name: 兜底分流, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png', proxies: [手动切换, 香港节点], type: select}
   # 节点地区分流
-  - {name: 香港节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png', !!merge <<: *auto, filter: "^(?=.*((?i)🇭🇰|香港|(\b(HK|Hong)\b)))(?!.*((?i)回国|校园|游戏|(\b(GAME)\b))).*$", hidden: true, interval: 900, lazy: true, type: url-test, use: [Subscribe]}
-  - {name: 日本节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png', !!merge <<: *auto, filter: "^(?=.*((?i)🇯🇵|日本|川日|东京|大阪|泉日|埼玉|(\b(JP|Japan)\b)))(?!.*((?i)回国|校园|游戏|(\b(GAME)\b))).*$", hidden: true, interval: 900, lazy: true, type: url-test, use: [Subscribe]}
-  - {name: 美国节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png', !!merge <<: *auto, filter: "^(?=.*((?i)🇺🇸|美国|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|(\b(US|United States)\b)))(?!.*((?i)回国|校园|游戏|(\b(GAME)\b))).*$", hidden: true, interval: 900, lazy: true, type: url-test, use: [Subscribe]}
-  - {name: 台湾节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png', !!merge <<: *auto, filter: "^(?=.*((?i)🇹🇼|台湾|(\b(TW|Tai|Taiwan)\b)))(?!.*((?i)回国|校园|游戏|(\b(GAME)\b))).*$", hidden: true, interval: 900, lazy: true, type: url-test, use: [Subscribe]}
-  - {name: 狮城节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png', !!merge <<: *auto, filter: "^(?=.*((?i)🇸🇬|新加坡|狮|(\b(SG|Singapore)\b)))(?!.*((?i)回国|校园|游戏|(\b(GAME)\b))).*$", interval: 900, lazy: true, type: select, use: [Subscribe]}
+  - {name: 香港节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png', filter: "^(?=.*((?i)🇭🇰|香港|(\b(HK|Hong)\b)))(?!.*((?i)回国|校园|游戏|(\b(GAME)\b))).*$", hidden: true, interval: 900, lazy: true, type: url-test, use: [Subscribe]}
+  - {name: 日本节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png', filter: "^(?=.*((?i)🇯🇵|日本|川日|东京|大阪|泉日|埼玉|(\b(JP|Japan)\b)))(?!.*((?i)回国|校园|游戏|(\b(GAME)\b))).*$", hidden: true, interval: 900, lazy: true, type: url-test, use: [Subscribe]}
+  - {name: 美国节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png', filter: "^(?=.*((?i)🇺🇸|美国|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|(\b(US|United States)\b)))(?!.*((?i)回国|校园|游戏|(\b(GAME)\b))).*$", hidden: true, interval: 900, lazy: true, type: url-test, use: [Subscribe]}
+  - {name: 台湾节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png', filter: "^(?=.*((?i)🇹🇼|台湾|(\b(TW|Tai|Taiwan)\b)))(?!.*((?i)回国|校园|游戏|(\b(GAME)\b))).*$", hidden: true, interval: 900, lazy: true, type: url-test, use: [Subscribe]}
+  - {name: 狮城节点, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png', filter: "^(?=.*((?i)🇸🇬|新加坡|狮|(\b(SG|Singapore)\b)))(?!.*((?i)回国|校园|游戏|(\b(GAME)\b))).*$", interval: 900, lazy: true, type: select, use: [Subscribe]}
 rule-providers:
   # 规则修正
   Direct: {!!merge <<: *c, url: 'https://ghproxy.com/https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Direct/Direct.yaml'}
