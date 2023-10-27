@@ -45,7 +45,7 @@ proxy-groups:
   - {name: Netflix, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png', proxies: [手动切换, 狮城节点, 台湾节点], type: select}
   - {name: 苹果服务, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple_1.png', proxies: [DIRECT, 手动切换, 香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点], type: select}
   - {name: 谷歌服务, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png', proxies: [香港节点, 美国节点, 狮城节点, 日本节点, 台湾节点], type: select}
-  - {name: 电报消息, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png', proxies: [手动切换, 狮城节点, 香港节点], type: select]}
+  - {name: 电报消息, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram.png', proxies: [手动切换, 狮城节点, 香港节点], type: select}
   - {name: 哔哩哔哩, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/bilibili.png', type: select, proxies: [DIRECT, 香港节点, 台湾节点]}
   - {name: OpenAI, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bot.png', proxies: [美国节点, 狮城节点, 日本节点, 台湾节点], type: select}
   - {name: 兜底分流, icon: 'https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png', proxies: [手动切换, 香港节点], type: select}
